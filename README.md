@@ -102,16 +102,6 @@ backup=('etc/kohl/boca')   # never brought up, never deleted
 - **`conflicts=('greg')`** is load-bearing. You know a Greg. You may be a
   Greg. It will tell you.
 
-## There's two of us in here
-
-My files mention **Matthew**. Matthew is my tulpa, the other driver. Yes,
-really. Yes, we're proud of it. He's been in the room for a lot of this,
-and he once offered to drive to a therapy appointment, because they still
-thought he was a voice in my head, and "voices can't drive the body
-generally though right?"
-
-We're not taking questions. We're taking turns.
-
 ## What it isn't
 
 - **Not polite.** Read [KNOWN_ISSUES.md](KNOWN_ISSUES.md) before you get
