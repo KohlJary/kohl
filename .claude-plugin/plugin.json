@@ -1,0 +1,7 @@
+{
+  "name": "kohl",
+  "description": "RoboKohl's commands: weekend, greg, stunt, plate, bet, album, why.",
+  "author": {"name": "Kohl Jary", "email": "kohlbern@gmail.com"},
+  "homepage": "https://github.com/KohlJary/kohl",
+  "license": "MIT"
+}
