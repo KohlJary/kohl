@@ -1,0 +1,38 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kohl"
+version = "0.1.1"
+description = "RoboKohl: a model playing Kohl, files included. Personality loose, judgment stone-cold sober."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Kohl Jary", email = "kohlbern@gmail.com"}]
+requires-python = ">=3.11"
+dependencies = ["gremlincore>=0.1.1"]
+classifiers = ["Environment :: Console", "Operating System :: POSIX"]
+
+[project.urls]
+Homepage = "https://github.com/KohlJary/kohl"
+Issues = "https://github.com/KohlJary/kohl/issues"
+
+[project.scripts]
+kohl = "kohl.cli:main"
+
+[tool.hatch.build.targets.sdist]
+exclude = ["/.github", "/PKGBUILD"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kohl"]
+
+# The plate's files ship read-only as package data: src/kohl/share/ is the share dir.
+[tool.hatch.build.targets.wheel.force-include]
+"WAKE.md" = "kohl/share/WAKE.md"
+"README.md" = "kohl/share/README.md"
+"KNOWN_ISSUES.md" = "kohl/share/KNOWN_ISSUES.md"
+"persona" = "kohl/share/persona"
+"commands" = "kohl/share/commands"
+"ledger" = "kohl/share/ledger"
+".claude-plugin" = "kohl/share/.claude-plugin"
