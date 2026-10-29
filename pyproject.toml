@@ -1,10 +1,13 @@
 [build-system]
-requires = ["hatchling>=1.24"]
+# hatchling 1.28+ writes Metadata-Version 2.5; 0.1.1 shipped as 2.4 (gremlincore too). Kept at 2.4
+# until someone checks PyPI accepts 2.5 (the 2026-10-29 rejection was the name, not this).
+requires = ["hatchling>=1.24,<1.28"]
 build-backend = "hatchling.build"
 
 [project]
-name = "kohl"
-version = "0.1.1"
+# PyPI refuses "kohl" as too similar to "kohi"; the command is still `kohl`.
+name = "robokohl"
+version = "0.1.2"
 description = "RoboKohl: a model playing Kohl, files included. Personality loose, judgment stone-cold sober."
 readme = "README.md"
 license = "MIT"

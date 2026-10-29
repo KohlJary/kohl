@@ -23,11 +23,16 @@ NAME = re.compile(r"^[a-z][a-z0-9-]*$")
 CLAUDE_INSTALL = "https://docs.anthropic.com/en/docs/claude-code (npm install -g @anthropic-ai/claude-code)"
 
 
+DIST_NAMES = ("robokohl", "kohl")  # PyPI name since 0.1.2; earlier builds called it kohl
+
+
 def version():
-    try:
-        return metadata.version("kohl")
-    except metadata.PackageNotFoundError:
-        return "0+unknown"
+    for name in DIST_NAMES:
+        try:
+            return metadata.version(name)
+        except metadata.PackageNotFoundError:
+            pass
+    return "0+unknown"
 
 
 def share():
