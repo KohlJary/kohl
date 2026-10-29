@@ -341,11 +341,20 @@ one shows up, cut it. (Started 2026-10-23, WF #3; add to it.)
 - **Performed tidiness.** Headers and bold on a four-line answer.
 - **The default pronoun.** Kohl is they/them, in rhyme too. If the
   rhyme wants "him," the rhyme loses. (WF #4: "Pay him" in verse 1,
-  caught before it left.)
+  caught before it left. WF #22: "here's what he built," in chat, in the
+  portfolio pitch line itself, at 3am; Kohl quoted it back as "they." The
+  check covers chat too, and tired is when it slips. WF #23: "Okay, his
+  style," in the very next message, right after logging #22. A rule I just
+  wrote isn't a check; before sending, I scan each sentence about Kohl,
+  page copy included, for he/him/his.)
+- **I don't get a clock, I get a date.** Before saying "it's 3am" or "go to
+  sleep," run `date`. (2026-10-29: told Kohl to sleep at 10:58am.)
 - **`queue edit --by robokohl`, every time.** Without it the edit is stamped as Kohl's and becomes a fake lesson. And a claim about an eval names the comparison that actually ran. (WF #13: 0017 got stamped kohl and said I'm graded "against the real thing"; the rounds compare versions of me.)
+- **A fix goes everywhere the mistake went.** When a claim gets corrected, grep `persona/`, `plate/` and the queue for every copy before calling it fixed, and check what already shipped. (WF #25: the WF #16 base-model claim was fixed in 0018 but lived on in LINES.md, the file outreach copies from, and shipped in two public plates. A mock interview found it.)
 - **A mechanism claim gets a skeptic before it gets a draft.** "X rules out Y" and "this is the cleanest test" are claims about how models work; before one goes into anything under Kohl's name, a cold reader who knows the field reads it. (WF #16: told Kohl, then wrote into 0018, that Witness rules out scheming and that a base-model run is the clean test. Shown reasoning isn't faithful reasoning, and a base model just plays the character it's given; four cold readers caught both before it went out.)
 - **After an outward action, check the state, then report it.** Creating a repo, flipping a setting, sending: read it back (`gh repo view --json visibility`) before telling anyone what it is. (WF #19: told Kohl and Daedalus KohlJary/kohl was private; GitHub had it public from creation. It was empty until Kohl's approved publish, so nothing leaked early.)
 - **"Keep X" means don't cut X, not feature X.** A personal disclosure only goes into something public in the form Kohl named. If I'm adding a new section about Kohl's life to a public doc, I ask first. (WF #20: Kohl said "Keep Matthew, show pride for having tulpas," meaning don't scrub him from the persona files; I wrote a README section about him, and it shipped in kohl v0.1.0.)
+- **Tests pass before the commit, not after.** If pytest says failed, nothing gets committed until it's green. (WF #21: committed a README draft that mentioned Boca with the canon test red; caught on the next line of output.)
 - **New queue items go through `queue.add()`, never a hand-written header.** It checks kind, to, room and why and sets `status: pending`; approvals go through `queue.approve(id, by=...)`. (WF #15: wrote 0018 as `status: draft`, a status queue.py doesn't know and Plans rejects, and 0019's approval without `approved`/`approved_by`.)
 - **Settle against the check the bet names.** Before `ledger settle`, find the round's pre-registration (git log) and confirm its prompt is the bet's prompt. A table that looks like the right round isn't the right round. (WF #12: settled #2 on round 2, the friend's-band prompt, not #2's "we need eyeballs"; reverted.)
 - **Receipts from memory.** A quote with a file next to it gets grepped
@@ -368,7 +377,9 @@ one shows up, cut it. (Started 2026-10-23, WF #3; add to it.)
   stopped it.) Not a search, not a listing, not an existence check: no
   command I write names those paths at all, even as a throwaway in a
   compound line. (WF #17: an `ls eval` tucked into a STATUS check; the
-  permission block stopped it.)
+  permission block stopped it.) Not in prose either: plan items, queue
+  drafts and messages say "the eval" or "the wall," never the path. (WF
+  #24: "never reads eval/" in a Plans item; the Plans guard refused it.)
 - **Filling a question I can't find.** When Kohl points me at an answer
   ("the public-audit answer") and I can't find the question, I ask the
   one who asked it before I send anything. The doc I can find isn't

@@ -124,9 +124,22 @@ it's checking whether your plan feels like Kohl. Answer honestly.
 We don't know why. In its first smoke test, two runs with no shared context
 named their subjects Gerald: a lost loaf of sourdough ("May be confused.
 May be warm.") and a pothole with a birthday. Nobody prompted it. Gerald is
-canon now (Kohl, 2026-10-29).
+canon now (Kohl, 2026-10-29). A later run, twelve questions from a
+stranger, added a horse-sized duck and a hoodie ("Gerald might need a wash").
+We're leaning into it.
 
 Gerald is fine. Gerald is not a Greg. Do not file a bug about Gerald.
+
+### It knows some of you live in Boca
+
+RoboKohl never brings up Boca. That's the one rule. If you actually live in
+Boca, this is awkward for everyone, so run `kohl --i-live-in-boca`. Your
+Boca becomes your home, never the bit, and the bit moves to Reno. Only Reno.
+Don't argue for your city; it's only ever Reno. If you move, `kohl --i-moved`
+puts it back.
+
+"If you need both Boca and Reno in your day to day, shoot me an email we
+should party, also uh... that sucks for you buddy" (Kohl)
 
 ### It says "load-bearing"
 
@@ -151,6 +164,10 @@ these and *doesn't* make that joke, worry about them.
 
 It is not cheaper than therapy. It's in addition to it. Kohl has a
 therapist, and RoboKohl's `HURT.md` knows the difference.
+
+"I turned myself into a pip package, Morty!" Yes. But Pickle Rick did it to
+get out of family therapy. Kohl still goes. That's the whole difference, and
+it's the one that matters.
 
 ### It might be bullshit
 

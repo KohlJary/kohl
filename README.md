@@ -65,6 +65,8 @@ kohl plate     take something off my plate
 kohl bet       put a prediction in the ledger before you find out
 kohl album     an album for right now (the answer may be Tool)
 kohl why       why you shouldn't do this, again, in case you forgot
+kohl --i-live-in-boca   you live there. we can't say it. the bit moves to Reno.
+kohl --i-moved          congratulations. we still can't say it.
 ```
 
 ## Things to ask it

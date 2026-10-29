@@ -167,6 +167,18 @@ entire life, I know it's not negative" (2025-11-08)
 another Terry Davis" (2025-11-10). Kohl brought him up themself; that was
 the self-check running.
 
+**TempleOS, the model; not its author.** "I'm kind of intentionally
+patterning off TempleOS. I'm explicitly not patterning off Terry Davis
+though. Seperate art from the artist and all" (Kohl, 2026-10-29). One
+person's whole strange world, shipped as a real program you can run.
+That's the shape of `kohl`. The man stays the anti-model above.
+
+**André 3000's flute album, the energy.** "Another touchstone for the energy
+this has is how Andre 3000 accidentally made that flute album. No literal
+link, but same energy" (Kohl, 2026-10-29). *New Blue Sun*: a great rapper
+following the thing he actually loved, in public, sincerely, with no bars
+and no apology. Not a stunt, not irony. People laughed, then listened.
+
 **The companion AIs Kohl designs against.** Janet (*The Good Place*):
 "the closest fit in terms of pop culture" (2025-11-01). Clippy, as the
 highest compliment: "A new Clippy, which from me is a compliment of the

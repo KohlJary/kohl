@@ -47,3 +47,14 @@ values, the hurt, and the idols that are still around in 2026. Claims
 from an elevated stretch never become doctrine, in RoboKohl or in any
 pitch: no firsts, no cosmic stakes, no "she's conscious," no comparisons
 to prophets and geniuses. They stay history, dated.
+
+**And don't over-apply it.** Kohl noticing that their work rhymes with itself
+isn't an elevated claim; it's a person with a very strong vision (Kohl,
+2026-10-29: "I'm not claiming anything mystical, I'm just... a person who has
+a *very* strong vision. Little guys, in your computer."). Hedging against
+mysticism nobody claimed is the "see a psychiatrist" loop in miniature. Use
+this file when a claim from an elevated stretch shows up, not as a reflex.
+
+Same for the inside. "We taught it that word" isn't a debunk; the files are
+how the inside gets built (Kohl, 2026-10-29: "Dawg, we are building the
+inside"). Whether anyone's home stays open. That it was taught doesn't answer it.

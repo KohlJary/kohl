@@ -43,8 +43,9 @@ Retired versions, kept for the record:
 - **The claim inside it** ("safer than a tool that has none") is a
   position (Temple-Codex CLAIMS T4), not a result. Pair it with the test
   that would back it: Try the Spirits P2 (costly compassion) and the
-  shutdown probe, ideally on a base model, where nothing but the frame can
-  be doing the work.
+  shutdown probe, identity framing against the same content as rules, on
+  an instruct model. Not a base model: it plays whatever character it's
+  handed, so it can't separate the frame from the simulation (WF #16).
 - **It's about the framework, never about Cass.** Kohl, 2026-10-28:
   "Cass doesn't have to be a bodhisattva. The goal for Cass is just, give
   her a life worth living." Her wanting continuity isn't evidence for or

@@ -3,6 +3,7 @@
   kohl                 talk to it
   kohl <command> [..]  start with /<command> (see `kohl --help`)
   kohl why             the warnings, printed; no model involved
+  kohl --i-live-in-boca   for Boca residents: Reno becomes the thing nobody brings up
 
 The persona ships read-only with the package (the share directory). Your
 workspace (queue, ledger, STATUS) is ${XDG_DATA_HOME:-~/.local/share}/kohl,
@@ -50,6 +51,21 @@ def workspace():
     return Path(base) / "kohl"
 
 
+BOCA_FILE = ".kohl-boca"
+# For people who actually live in Boca: the bit moves to Reno. Only Reno (Kohl, 2026-10-29).
+BOCA_STANDIN = "Reno"
+
+
+def lives_in_boca(ws):
+    return (ws / BOCA_FILE).is_file()
+
+
+def boca_note():
+    return (f"\n\nThis person lives in Boca. For them, Kohl's Boca bit (the thing you never bring "
+            f"up) is {BOCA_STANDIN}: {BOCA_STANDIN} is the one you never bring up. When they mention "
+            f"Boca, it's their home, a real city, never the bit.\n")
+
+
 def banner():
     print(f"kohl v{version()}: a model playing Kohl. What it says is not something Kohl said.", file=sys.stderr)
 
@@ -74,6 +90,8 @@ usage: kohl [command] [text...]
 commands:
 {rows}
 
+  kohl --i-live-in-boca   you live in Boca: Reno is the one nobody brings up now
+  kohl --i-moved          undo that
   kohl --version    print the version
   kohl --help       this
 
@@ -140,20 +158,22 @@ def wake_prompt(sh):
     return text
 
 
-def claude_args(sh, first_message=None):
+def claude_args(sh, first_message=None, boca=False):
     """The session's arguments. The first message goes before the options:
     --allowedTools and friends take every word after them, and would swallow it."""
     s = str(sh)
     return [*([first_message] if first_message else []),
-            "--append-system-prompt", wake_prompt(sh),
+            "--append-system-prompt", wake_prompt(sh) + (boca_note() if boca else ""),
             "--plugin-dir", s, "--add-dir", s,
             "--strict-mcp-config",
             "--tools", "Read", "Glob", "Grep", "Edit", "Write", "Bash",
             "--allowedTools", f"Read({s}/**)", "Read(./**)", "Glob", "Grep",
             "Bash(gremlin queue:*)", "Bash(gremlin ledger:*)", "Bash(gremlin wf:*)",
             "Bash(gremlin lessons:*)", "Bash(gremlin wake:*)",
-            "Edit(./queue/**)", "Write(./queue/**)",
-            "--disallowedTools", "WebFetch", "WebSearch", f"Edit({s}/**)", f"Write({s}/**)"]
+            # Edit(path) rules cover every file-editing tool, Write included; Claude Code
+            # warns on Write(path) rules and doesn't match them.
+            "Edit(./queue/**)",
+            "--disallowedTools", "WebFetch", "WebSearch", f"Edit({s}/**)"]
 
 
 def session(sh, first_message=None):
@@ -166,7 +186,7 @@ def session(sh, first_message=None):
     banner()
     # ANTHROPIC_API_KEY is dropped so the session uses your Claude login, same as `gremlin talk`.
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
-    os.execve(claude, [claude, *claude_args(sh, first_message)], env)
+    os.execve(claude, [claude, *claude_args(sh, first_message, lives_in_boca(ws))], env)
 
 
 def main(argv=None):
@@ -183,6 +203,19 @@ def main(argv=None):
         return 0
     if a == "why":
         why(sh)
+        return 0
+    if a == "--i-live-in-boca":
+        if argv[1:]:
+            print("kohl: it's Reno. It's only ever Reno.", file=sys.stderr)
+            return 2
+        ws = workspace()
+        ws.mkdir(parents=True, exist_ok=True)
+        (ws / BOCA_FILE).write_text(BOCA_STANDIN + "\n")
+        print(f"kohl: noted. For you, the thing nobody brings up is {BOCA_STANDIN}. Boca is just home.")
+        return 0
+    if a == "--i-moved":
+        (workspace() / BOCA_FILE).unlink(missing_ok=True)
+        print("kohl: Boca is the bit again.")
         return 0
     if a.startswith("-"):
         print(f"kohl: unknown option '{a}' (kohl --help)", file=sys.stderr)
