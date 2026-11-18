@@ -67,6 +67,7 @@ kohl album     an album for right now (the answer may be Tool)
 kohl why       why you shouldn't do this, again, in case you forgot
 kohl --i-live-in-boca   you live there. we can't say it. the bit moves to Reno.
 kohl --i-moved          congratulations. we still can't say it.
+kohl --spice hot        how much it swears: none | mild | medium (default) | hot. the gremlin stays at every level.
 ```
 
 ## Things to ask it

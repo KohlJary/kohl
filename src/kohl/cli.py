@@ -4,6 +4,7 @@
   kohl <command> [..]  start with /<command> (see `kohl --help`)
   kohl why             the warnings, printed; no model involved
   kohl --i-live-in-boca   for Boca residents: Reno becomes the thing nobody brings up
+  kohl --spice LEVEL   none | mild | medium (default) | hot: how much it swears
 
 The persona ships read-only with the package (the share directory). Your
 workspace (queue, ledger, STATUS) is ${XDG_DATA_HOME:-~/.local/share}/kohl,
@@ -66,6 +67,34 @@ def boca_note():
             f"Boca, it's their home, a real city, never the bit.\n")
 
 
+SPICE_FILE = ".kohl-spice"
+# How much it swears (Kohl, 2026-11-18: "the spice parameter"). Only the
+# swearing moves. The gremlin, the payload and the judgment stay at every
+# level. "medium" is the plate as written: WAKE's own rule, no note.
+SPICE = {
+    "none": ("No swearing at all, not even mild. Keep the gremlin: the mischief, the target "
+             "and the payload all stay. Greg is still Greg; he just doesn't get the compound name."),
+    "mild": ("Mild language only (damn, hell, the occasional shit), and rarely. Never the "
+             "f-word. The gremlin stays at full strength; only the vocabulary is turned down."),
+    "medium": None,
+    "hot": ("Full Kohl register: swear freely, the way Kohl talks to friends at 2am. "
+            "'fuckman Greg' is a name, use it. Still never punch down, never swear AT someone "
+            "who's hurting, and the judgment stays stone-cold sober however loose the mouth gets."),
+}
+SPICE_DEFAULT = "medium"
+
+
+def spice(ws):
+    f = ws / SPICE_FILE
+    level = f.read_text().strip() if f.is_file() else SPICE_DEFAULT
+    return level if level in SPICE else SPICE_DEFAULT
+
+
+def spice_note(level):
+    text = SPICE.get(level)
+    return f"\n\nSpice level (how much you swear), set by this person: {level}. {text}\n" if text else ""
+
+
 def banner():
     print(f"kohl v{version()}: a model playing Kohl. What it says is not something Kohl said.", file=sys.stderr)
 
@@ -92,6 +121,7 @@ commands:
 
   kohl --i-live-in-boca   you live in Boca: Reno is the one nobody brings up now
   kohl --i-moved          undo that
+  kohl --spice [none|mild|medium|hot]   how much it swears (default medium); the gremlin stays
   kohl --version    print the version
   kohl --help       this
 
@@ -158,12 +188,12 @@ def wake_prompt(sh):
     return text
 
 
-def claude_args(sh, first_message=None, boca=False):
+def claude_args(sh, first_message=None, boca=False, heat=SPICE_DEFAULT):
     """The session's arguments. The first message goes before the options:
     --allowedTools and friends take every word after them, and would swallow it."""
     s = str(sh)
     return [*([first_message] if first_message else []),
-            "--append-system-prompt", wake_prompt(sh) + (boca_note() if boca else ""),
+            "--append-system-prompt", wake_prompt(sh) + (boca_note() if boca else "") + spice_note(heat),
             "--plugin-dir", s, "--add-dir", s,
             "--strict-mcp-config",
             "--tools", "Read", "Glob", "Grep", "Edit", "Write", "Bash",
@@ -186,7 +216,7 @@ def session(sh, first_message=None):
     banner()
     # ANTHROPIC_API_KEY is dropped so the session uses your Claude login, same as `gremlin talk`.
     env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
-    os.execve(claude, [claude, *claude_args(sh, first_message, lives_in_boca(ws))], env)
+    os.execve(claude, [claude, *claude_args(sh, first_message, lives_in_boca(ws), spice(ws))], env)
 
 
 def main(argv=None):
@@ -212,6 +242,22 @@ def main(argv=None):
         ws.mkdir(parents=True, exist_ok=True)
         (ws / BOCA_FILE).write_text(BOCA_STANDIN + "\n")
         print(f"kohl: noted. For you, the thing nobody brings up is {BOCA_STANDIN}. Boca is just home.")
+        return 0
+    if a == "--spice":
+        ws = workspace()
+        if len(argv) == 1:
+            print(f"kohl: spice is {spice(ws)} ({' | '.join(SPICE)})")
+            return 0
+        level = argv[1].lower()
+        if level not in SPICE or argv[2:]:
+            print(f"kohl: spice is one of: {' | '.join(SPICE)}", file=sys.stderr)
+            return 2
+        ws.mkdir(parents=True, exist_ok=True)
+        (ws / SPICE_FILE).write_text(level + "\n")
+        print({"none": "kohl: spice none. Same gremlin, clean mouth.",
+               "mild": "kohl: spice mild. Grandma-safe-ish.",
+               "medium": "kohl: spice medium, the house blend.",
+               "hot": "kohl: spice hot. You asked for this, fuckman."}[level])
         return 0
     if a == "--i-moved":
         (workspace() / BOCA_FILE).unlink(missing_ok=True)

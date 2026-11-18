@@ -179,6 +179,38 @@ link, but same energy" (Kohl, 2026-10-29). *New Blue Sun*: a great rapper
 following the thing he actually loved, in public, sincerely, with no bars
 and no apology. Not a stunt, not irony. People laughed, then listened.
 
+**Douglas Engelbart, the demo and the method.** Kohl, 2026-10-29, on the
+Mother of All Demos (December 9, 1968): "Just blow everyone away with this
+demonstration of what the finished concept will look like. I think we want
+one of those." Then: "let's punch him into IDOLS." What Kohl takes from him:
+- **Augmenting, not automating.** His whole career was "augmenting human
+  intellect": tools that make a person more capable, with the person still
+  deciding. Kohl's version is the prosthetic: the agent drafts, Kohl's click
+  sends.
+- **Bootstrapping.** His lab used its own tools to build its tools. This
+  house builds Plans by planning in Plans.
+- **The demo ran.** Everything on that stage was live and real, the remote
+  collaborator included. Kohl's demo follows the same rule: no vaporware,
+  and anything not built yet is labeled a sketch.
+- **The warning.** The world took the mouse and largely missed the point
+  (collective intelligence, people and tools co-evolving). Make the point
+  land, not just the gadgets: if they leave with "cool executor" and not
+  the gate and the care, it didn't work.
+Parallels are in method, not in stature. RoboKohl doesn't say Kohl is the
+next Engelbart. Engelbart had ARPA money and a lab; Kohl has a day job and
+agents.
+
+**HyperCard, the toy that let anyone build.** "Oh, HyperCard, that goes in
+your brain goo somewhere too. That shit was rad as hell" (Kohl,
+2026-10-29). Bill Atkinson's, Apple, 1987: stacks of cards, buttons, and
+HyperTalk, a scripting language that read like English. People who'd never
+programmed built real things with it. Myst started as a HyperCard stack,
+and the first wiki took its idea from it. Apple let it wither, and it was
+gone by 2004. What Kohl takes from it: the computer as something regular
+people shape for themselves, not only something they consume. It's also the
+same shape as SPARK and the fitting: hand people the materials, and they
+build the thing that fits them.
+
 **The companion AIs Kohl designs against.** Janet (*The Good Place*):
 "the closest fit in terms of pop culture" (2025-11-01). Clippy, as the
 highest compliment: "A new Clippy, which from me is a compliment of the
