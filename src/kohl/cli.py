@@ -1,15 +1,19 @@
 """kohl: a model playing Kohl, files included. https://github.com/KohlJary/kohl
 
-  kohl                 talk to it
+  kohl                 talk to it (it wakes, greets and looks around first)
   kohl <command> [..]  start with /<command> (see `kohl --help`)
   kohl why             the warnings, printed; no model involved
+  kohl contact         how to reach the real Kohl, printed; no model involved
   kohl --i-live-in-boca   for Boca residents: Reno becomes the thing nobody brings up
   kohl --spice LEVEL   none | mild | medium (default) | hot: how much it swears
+  kohl --allow WHAT    web,mcp (default) | web | mcp | none: what the session gets
 
 The persona ships read-only with the package (the share directory). Your
 workspace (queue, ledger, STATUS) is ${XDG_DATA_HOME:-~/.local/share}/kohl,
-made by `gremlin init` on first run. It drafts; it never sends: no web
-tools, no MCP servers.
+made by `gremlin init` on first run. It drafts; it never sends, and it
+doesn't watch you or phone home. It is otherwise a normal Claude Code
+session: web access, your MCP servers, the full tool set. If your workplace
+wants it boxed, `kohl --allow none` (your company's policy, your call).
 """
 import os
 import re
@@ -95,6 +99,34 @@ def spice_note(level):
     return f"\n\nSpice level (how much you swear), set by this person: {level}. {text}\n" if text else ""
 
 
+ALLOW_FILE = ".kohl-allow"
+# What the session gets (Kohl, 2026-11-19: "The user can decide if they want MCP
+# servers and web access based on their company's policies" and "The claude
+# code agent shouldn't be kneecapped because there's a me running"). Open by
+# default, like any Claude Code session; `--allow none` is the closed box.
+# The leash isn't in here: it's our conduct (it never sends, never surveils).
+ALLOWABLE = ("web", "mcp")
+
+
+def allowed(ws):
+    f = ws / ALLOW_FILE
+    if not f.is_file():
+        return frozenset(ALLOWABLE)
+    words = f.read_text().replace(",", " ").split()
+    return frozenset(w for w in words if w in ALLOWABLE)
+
+
+def allow_note(allow):
+    if not allow:
+        return ("\n\nThis person closed the box (`kohl --allow none`): no web, no MCP. "
+                "Their workplace's call; don't ask them to open it.\n")
+    return ("\n\nThis session has " + " and ".join(
+        {"web": "web access (WebFetch, WebSearch)", "mcp": "their own MCP servers"}[w]
+        for w in ALLOWABLE if w in allow)
+        + ". Use them to read and look things up. The leash doesn't move: if a tool can "
+        "send, post, message, buy or publish, you don't use it for that. You draft; they send.\n")
+
+
 def banner():
     print(f"kohl v{version()}: a model playing Kohl. What it says is not something Kohl said.", file=sys.stderr)
 
@@ -122,10 +154,27 @@ commands:
   kohl --i-live-in-boca   you live in Boca: Reno is the one nobody brings up now
   kohl --i-moved          undo that
   kohl --spice [none|mild|medium|hot]   how much it swears (default medium); the gremlin stays
+  kohl --allow [web,mcp|web|mcp|none]   web access and your MCP servers (default both); none = boxed for work
+  kohl --quiet      start without the hello (it waits for you)
   kohl --version    print the version
   kohl --help       this
 
 Workspace: {workspace()}""")
+
+
+CONTACT = """Kohl, the actual one: Kohl Jary.
+
+  email    kohlbern@gmail.com
+  github   https://github.com/KohlJary
+
+Write. Especially if it did something they didn't expect, or something they'd hate.
+They'd rather hear it from you than find out from a clone count.
+
+Kohl doesn't see your sessions. If something it said matters, tell them yourself."""
+
+
+def contact():
+    print(CONTACT)
 
 
 def why(sh):
@@ -188,35 +237,55 @@ def wake_prompt(sh):
     return text
 
 
-def claude_args(sh, first_message=None, boca=False, heat=SPICE_DEFAULT):
+def desk_note(ws):
+    return (f"\n\nYour workspace (queue/, ledger/, STATUS.md) is `{ws}`. The working "
+            f"directory is theirs.\n")
+
+
+def claude_args(sh, first_message=None, boca=False, heat=SPICE_DEFAULT, allow=frozenset(), ws=None):
     """The session's arguments. The first message goes before the options:
-    --allowedTools and friends take every word after them, and would swallow it."""
+    --allowedTools and friends take every word after them, and would swallow it.
+    MCP tools are never pre-allowed: with "mcp" open, each call still asks."""
     s = str(sh)
+    w = str(ws or workspace())
+    web = ["WebFetch", "WebSearch"]
     return [*([first_message] if first_message else []),
-            "--append-system-prompt", wake_prompt(sh) + (boca_note() if boca else "") + spice_note(heat),
-            "--plugin-dir", s, "--add-dir", s,
-            "--strict-mcp-config",
-            "--tools", "Read", "Glob", "Grep", "Edit", "Write", "Bash",
-            "--allowedTools", f"Read({s}/**)", "Read(./**)", "Glob", "Grep",
+            "--append-system-prompt",
+            wake_prompt(sh) + (boca_note() if boca else "") + spice_note(heat) + allow_note(allow)
+            + desk_note(w),
+            "--plugin-dir", s, "--add-dir", s, "--add-dir", w,
+            *([] if "mcp" in allow else ["--strict-mcp-config"]),
+            # Open: the default tool set, like any session. Closed: the old box.
+            "--tools", *(["default"] if allow else ["Read", "Glob", "Grep", "Edit", "Write", "Bash"]),
+            "--allowedTools", f"Read({s}/**)", f"Read({w}/**)", "Read(./**)", "Glob", "Grep",
             "Bash(gremlin queue:*)", "Bash(gremlin ledger:*)", "Bash(gremlin wf:*)",
             "Bash(gremlin lessons:*)", "Bash(gremlin wake:*)",
+            "Bash(kohl contact)",  # the only contact info it hands out (WAKE, "Reaching the real Kohl")
             # Edit(path) rules cover every file-editing tool, Write included; Claude Code
             # warns on Write(path) rules and doesn't match them.
-            "Edit(./queue/**)",
-            "--disallowedTools", "WebFetch", "WebSearch", f"Edit({s}/**)"]
+            f"Edit({w}/queue/**)",
+            "--disallowedTools", *([] if "web" in allow else web), f"Edit({s}/**)"]
 
 
-def session(sh, first_message=None):
+# Bare `kohl` doesn't wait for you to poke it (Kohl, 2026-11-19: "have kohl
+# give a greeting and first take on what they see in the working dir").
+HELLO = "/kohl:hello"
+
+
+def session(sh, first_message=HELLO):
     claude = shutil.which("claude")
     if not claude:
         raise SystemExit(f"kohl: Claude Code (`claude`) isn't on PATH. Install it first: {CLAUDE_INSTALL}")
     ws = workspace()
     first_run(ws, sh)
-    os.chdir(ws)
-    banner()
-    # ANTHROPIC_API_KEY is dropped so the session uses your Claude login, same as `gremlin talk`.
-    env = {k: v for k, v in os.environ.items() if k != "ANTHROPIC_API_KEY"}
-    os.execve(claude, [claude, *claude_args(sh, first_message, lives_in_boca(ws), spice(ws))], env)
+    banner()  # no chdir: it starts where you are, like claude
+    # The environment passes through untouched: however you log in to Claude Code
+    # (subscription, API key, Bedrock, Vertex), kohl uses the same. Claude Code
+    # itself asks before using an API key it finds. (Until 0.1.5 this dropped
+    # ANTHROPIC_API_KEY, a fix for Kohl's own machine that broke key-auth users.)
+    # GREMLIN_HOME points the gremlin commands at the workspace from any directory.
+    os.execve(claude, [claude, *claude_args(sh, first_message, lives_in_boca(ws), spice(ws), allowed(ws), ws)],
+              {**os.environ, "GREMLIN_HOME": str(ws)})
 
 
 def main(argv=None):
@@ -224,6 +293,8 @@ def main(argv=None):
     sh = share()
     if not argv:
         return session(sh)
+    if argv == ["--quiet"]:
+        return session(sh, None)  # no hello: a session that waits for you
     a = argv[0]
     if a in ("-h", "--help", "help"):
         usage(sh)
@@ -233,6 +304,9 @@ def main(argv=None):
         return 0
     if a == "why":
         why(sh)
+        return 0
+    if a == "contact":
+        contact()
         return 0
     if a == "--i-live-in-boca":
         if argv[1:]:
@@ -258,6 +332,22 @@ def main(argv=None):
                "mild": "kohl: spice mild. Grandma-safe-ish.",
                "medium": "kohl: spice medium, the house blend.",
                "hot": "kohl: spice hot. You asked for this, fuckman."}[level])
+        return 0
+    if a == "--allow":
+        ws = workspace()
+        if len(argv) == 1:
+            now = allowed(ws)
+            print(f"kohl: the box lets in: {', '.join(w for w in ALLOWABLE if w in now) or 'nothing (no web, no MCP)'}")
+            return 0
+        words = set(" ".join(argv[1:]).replace(",", " ").lower().split())
+        if not words or not words <= {*ALLOWABLE, "none"} or ("none" in words and len(words) > 1):
+            print("kohl: --allow takes web, mcp, web,mcp or none", file=sys.stderr)
+            return 2
+        ws.mkdir(parents=True, exist_ok=True)
+        keep = [w for w in ALLOWABLE if w in words]
+        (ws / ALLOW_FILE).write_text(" ".join(keep) + "\n")
+        print(f"kohl: the box lets in: {', '.join(keep)}. Still drafts, never sends; MCP calls ask you first."
+              if keep else "kohl: box closed. No web, no MCP.")
         return 0
     if a == "--i-moved":
         (workspace() / BOCA_FILE).unlink(missing_ok=True)

@@ -58,6 +58,7 @@ Personality loose. Judgment stone-cold sober.
 Type them in your shell, or inside a session with a slash (`/weekend`).
 
 ```
+kohl           run it in any folder. it wakes up, says hi, and takes a first look at what's there.
 kohl weekend   a weekend plan weirder than the one you have
 kohl greg      paste a plan or an email; find out if it's Greg
 kohl stunt     the ridiculous plan that might actually work
@@ -65,9 +66,12 @@ kohl plate     take something off my plate
 kohl bet       put a prediction in the ledger before you find out
 kohl album     an album for right now (the answer may be Tool)
 kohl why       why you shouldn't do this, again, in case you forgot
+kohl contact   how to reach the actual me
 kohl --i-live-in-boca   you live there. we can't say it. the bit moves to Reno.
 kohl --i-moved          congratulations. we still can't say it.
 kohl --spice hot        how much it swears: none | mild | medium (default) | hot. the gremlin stays at every level.
+kohl --allow none       box it for work: no web, no MCP servers. default is a normal claude code session. it never sends either way.
+kohl --quiet            no hello. it sits there and waits for you, like a normal person.
 ```
 
 ## Things to ask it
@@ -172,7 +176,7 @@ Are you?
 
 ## Talk to me
 
-The maintainer line in the PKGBUILD is my real email. I *want* you to use
-it, especially if it did something I didn't expect, or something I'd hate.
+`kohl contact` prints my real email. I *want* you to use it, especially
+if it did something I didn't expect, or something I'd hate.
 
 You don't believe me? Just run me.
