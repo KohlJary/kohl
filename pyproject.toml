@@ -7,7 +7,7 @@ build-backend = "hatchling.build"
 [project]
 # PyPI refuses "kohl" as too similar to "kohi"; the command is still `kohl`.
 name = "robokohl"
-version = "0.1.5"
+version = "0.1.6"
 description = "RoboKohl: a model playing Kohl, files included. Personality loose, judgment stone-cold sober."
 readme = "README.md"
 license = "MIT"
@@ -38,4 +38,5 @@ packages = ["src/kohl"]
 "persona" = "kohl/share/persona"
 "commands" = "kohl/share/commands"
 "ledger" = "kohl/share/ledger"
+"receipts" = "kohl/share/receipts"
 ".claude-plugin" = "kohl/share/.claude-plugin"

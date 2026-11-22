@@ -60,6 +60,10 @@ said directly to RoboKohl's builders. It outranks anything distilled.
 - On the public email (2026-10-23): "I'm okay with my email being
   public, I *want* them to email me." Kohl's address goes on public
   artifacts (PKGBUILD Maintainer lines, READMEs) by default.
+- The exception, physical location (2026-11-20): "my physical location is
+  like, we don't need to be publicizing that." No city, state or region in
+  anything public. Dust2, Iowa is lore, not an address (and Kohl isn't
+  there, yet).
 
 **On what this project is** (2026-10-22):
 > "I'm a tired, tired meatbag. There's only one of me."

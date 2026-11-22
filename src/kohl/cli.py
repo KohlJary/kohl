@@ -4,6 +4,8 @@
   kohl <command> [..]  start with /<command> (see `kohl --help`)
   kohl why             the warnings, printed; no model involved
   kohl contact         how to reach the real Kohl, printed; no model involved
+  kohl spotify [..]    twelve years of Kohl's listening, printed; no model involved
+  kohl listen [..]     opt-in ears: --setup once (on your yes), then kohl listen FILE
   kohl --i-live-in-boca   for Boca residents: Reno becomes the thing nobody brings up
   kohl --spice LEVEL   none | mild | medium (default) | hot: how much it swears
   kohl --allow WHAT    web,mcp (default) | web | mcp | none: what the session gets
@@ -16,6 +18,7 @@ session: web access, your MCP servers, the full tool set. If your workplace
 wants it boxed, `kohl --allow none` (your company's policy, your call).
 """
 import os
+import random
 import re
 import shutil
 import subprocess
@@ -151,6 +154,8 @@ usage: kohl [command] [text...]
 commands:
 {rows}
 
+  kohl listen       opt-in ears: --setup once, then kohl listen FILE (or /kohl:listen in a session)
+  kohl spotify      twelve years of Kohl's listening (fact | day | top | find); no model
   kohl --i-live-in-boca   you live in Boca: Reno is the one nobody brings up now
   kohl --i-moved          undo that
   kohl --spice [none|mild|medium|hot]   how much it swears (default medium); the gremlin stays
@@ -261,15 +266,87 @@ def claude_args(sh, first_message=None, boca=False, heat=SPICE_DEFAULT, allow=fr
             "Bash(gremlin queue:*)", "Bash(gremlin ledger:*)", "Bash(gremlin wf:*)",
             "Bash(gremlin lessons:*)", "Bash(gremlin wake:*)",
             "Bash(kohl contact)",  # the only contact info it hands out (WAKE, "Reaching the real Kohl")
+            "Bash(kohl spotify:*)",  # the receipts opener; read-only, printed from the share dir
             # Edit(path) rules cover every file-editing tool, Write included; Claude Code
             # warns on Write(path) rules and doesn't match them.
-            f"Edit({w}/queue/**)",
+            f"Edit({w}/queue/**)", f"Read({w}/ears/**)",
             "--disallowedTools", *([] if "web" in allow else web), f"Edit({s}/**)"]
+
+
+# The ears, opt-in (Kohl, 2026-11-20: "not installed by default, scripts and
+# shit ready to go so robokohl can pitch it, and if the user says okay then
+# RoboKohl sets it up and starts jamming"). acousmatic is deterministic DSP:
+# a recorded song in, a time-ordered record of what's heard in it out. Its
+# own venv in the workspace, no sudo, pinned. Lyrics are never looked up.
+ACOUSMATIC = "acousmatic @ git+https://github.com/KohlJary/acousmatic.git@42817cf5455ae0e90da166ce8574791f1cc437ea"
+FFMPEG_HINT = ("ffmpeg isn't installed, and acousmatic needs it to read most files. One command, "
+               "yours to run: Arch `sudo pacman -S ffmpeg`, Debian/Ubuntu `sudo apt install ffmpeg`, "
+               "Fedora `sudo dnf install ffmpeg`, macOS `brew install ffmpeg`.")
+
+
+def ears(ws):
+    return ws / "ears"
+
+
+def ears_bin(ws):
+    return ears(ws) / "venv" / "bin" / "acousmatic"
+
+
+def listen(ws, args, run=subprocess.run):
+    if not args or args[0] in ("-h", "--help"):
+        state = "set up" if ears_bin(ws).is_file() else "not set up (kohl listen --setup)"
+        print("usage: kohl listen --setup | kohl listen FILE\n\n"
+              "  --setup   install the ears (acousmatic, pinned) in their own venv in your workspace. no sudo.\n"
+              "  FILE      listen to a song you have. the record lands in your workspace for RoboKohl to read.\n\n"
+              f"ears: {state}. buy the album from the band. tell them how you got there.")
+        return 0
+    if args == ["--setup"]:
+        venv = ears(ws) / "venv"
+        if not ears_bin(ws).is_file():
+            print(f"kohl listen: setting up the ears in {venv} (a few minutes; numpy, librosa and friends)")
+            run([sys.executable, "-m", "venv", str(venv)], check=True)
+            run([str(venv / "bin/pip"), "install", "-q", ACOUSMATIC], check=True)
+        if not shutil.which("ffmpeg"):
+            print(f"kohl listen: {FFMPEG_HINT}")
+        print(f"kohl listen: ears ready. kohl listen FILE")
+        return 0
+    if len(args) != 1 or args[0].startswith("-"):
+        print("kohl listen: one file, or --setup", file=sys.stderr)
+        return 2
+    song = Path(args[0]).expanduser()
+    if not song.is_file():
+        print(f"kohl listen: no file at {song}", file=sys.stderr)
+        return 2
+    if not ears_bin(ws).is_file():
+        print("kohl listen: no ears yet. `kohl listen --setup` installs them (opt-in, nothing else changes).",
+              file=sys.stderr)
+        return 3
+    out = ears(ws) / "records" / re.sub(r"[^\w.-]+", "-", song.stem).strip("-")[:80]
+    r = run([str(ears_bin(ws)), "listen", str(song), "-o", str(out), "--offline"])
+    if r.returncode:
+        return r.returncode
+    print(f"kohl listen: the record is {out / 'record.md'}")
+    return 0
 
 
 # Bare `kohl` doesn't wait for you to poke it (Kohl, 2026-11-19: "have kohl
 # give a greeting and first take on what they see in the working dir").
 HELLO = "/kohl:hello"
+# Every open gets one opener, so no two hellos are the same (Kohl, 2026-11-20:
+# "learn something cool, hear about something weird going on in the world, get
+# nudged towards a capability... or just says some utterly fucking unhinged
+# shit, potentially involving Greg. A little guy, in your computer. He loves you.")
+OPENERS = ("cool", "weird", "try", "unhinged", "receipts")
+# "receipts": a fact from Kohl's own listening history (Kohl, 2026-11-20:
+# "a cool or utterly savage factoid about my listening habits on launch on
+# occasion"). One opener in five.
+
+
+def hello(allow):
+    """The hello, with an opener picked here: a model asked to be random isn't.
+    "weird" needs the web, so a boxed session never gets it."""
+    kinds = [k for k in OPENERS if k != "weird" or "web" in allow]
+    return f"{HELLO} {random.choice(kinds)}"
 
 
 def session(sh, first_message=HELLO):
@@ -284,7 +361,10 @@ def session(sh, first_message=HELLO):
     # itself asks before using an API key it finds. (Until 0.1.5 this dropped
     # ANTHROPIC_API_KEY, a fix for Kohl's own machine that broke key-auth users.)
     # GREMLIN_HOME points the gremlin commands at the workspace from any directory.
-    os.execve(claude, [claude, *claude_args(sh, first_message, lives_in_boca(ws), spice(ws), allowed(ws), ws)],
+    allow = allowed(ws)
+    if first_message == HELLO:
+        first_message = hello(allow)
+    os.execve(claude, [claude, *claude_args(sh, first_message, lives_in_boca(ws), spice(ws), allow, ws)],
               {**os.environ, "GREMLIN_HOME": str(ws)})
 
 
@@ -308,6 +388,16 @@ def main(argv=None):
     if a == "contact":
         contact()
         return 0
+    if a == "listen":
+        ws = workspace()
+        ws.mkdir(parents=True, exist_ok=True)
+        return listen(ws, argv[1:])
+    if a == "spotify":
+        from . import spotify
+        f = sh / "receipts" / "spotify.tsv"
+        if not f.is_file():
+            raise SystemExit(f"kohl: {f} is missing")
+        return spotify.main(f, argv[1:])
     if a == "--i-live-in-boca":
         if argv[1:]:
             print("kohl: it's Reno. It's only ever Reno.", file=sys.stderr)

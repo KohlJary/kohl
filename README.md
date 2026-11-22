@@ -67,6 +67,8 @@ kohl bet       put a prediction in the ledger before you find out
 kohl album     an album for right now (the answer may be Tool)
 kohl why       why you shouldn't do this, again, in case you forgot
 kohl contact   how to reach the actual me
+kohl spotify   twelve years of my listening history. all of it. (fact | day DATE | top YEAR | find TEXT)
+kohl listen    opt-in ears: it hears what's actually in a song file. nothing installs until you say yes.
 kohl --i-live-in-boca   you live there. we can't say it. the bit moves to Reno.
 kohl --i-moved          congratulations. we still can't say it.
 kohl --spice hot        how much it swears: none | mild | medium (default) | hot. the gremlin stays at every level.
@@ -91,6 +93,72 @@ Not sure where to start? Try one:
   you laugh, in that order.
 - **"Am I being a Greg?"** You might not like the answer. That's the
   feature.
+
+## Receipts
+
+My entire Spotify history ships in this package. 2014 to now, 73,615
+plays: every song, every skip, every podcast. `kohl spotify` reads it, no
+model involved, and about one launch in five RoboKohl opens with a fact
+from it. Cool or savage, its call.
+
+Why: the pitch is that I put myself in here on purpose. Persona files are
+easy to curate. Twelve years of what I actually listened to isn't. If I'm
+asking you to run a package with my name on it, you get the part I couldn't
+make look good.
+
+The worst day in it:
+
+```
+$ kohl spotify day 2021-08-05
+Thursday, August 5, 2021: 244 plays, 15 hours.
+  185x  Paint Me Red (Avatar)
+    3x  The Diary of Jane - Single Version (Breaking Benjamin)
+    2x  It's All Over (Three Days Grace)
+```
+
+185 times. One song. One day. I was working. That is not a defense.
+
+```
+$ kohl spotify find careless whisper
+'careless whisper': 98 plays, 6 hours, 2014-07-01 to 2021-02-06.
+     57  Careless Whisper (Seether)
+     37  Careless Whisper - Strings Version (Seether)
+      3  Careless Whisper (Seether)
+      1  Careless Whisper (George Michael)
+```
+
+Seether 97, George Michael 1. There is a strings version of the Seether
+cover. I played it 37 times.
+
+```
+$ kohl spotify find nickelback
+'nickelback': 16 plays, 49 minutes, 2014-09-18 to 2026-11-01.
+```
+
+The last one was this month. In my defense, and Spotify's own data backs
+me: I have never once pressed play on Nickelback. Fifteen of those started
+because the song before them ended. The sixteenth, I skipped forward
+into by accident and lasted four seconds. The algorithm just knows what
+I am.
+
+What's not in it: where I was (IP addresses, country), what I was on
+(devices), what time it was (dates only), and the 18 plays I did in
+incognito mode. I'm committed to the bit, not stupid.
+
+## Ears (opt-in)
+
+`kohl listen` hooks it up to [acousmatic](https://github.com/KohlJary/acousmatic),
+a listening tool I built: a song file in, a time-ordered record of what's
+actually heard in it out. Tempo, key, sections, the bar where the drums
+drop out. No model guessing; it's signal processing, and the same file
+gives the same record every time. Nothing installs by default. Say yes
+(`kohl listen --setup`) and it builds its own little venv in your kohl
+workspace, no sudo, then it can sit and listen with you. It never looks
+up lyrics or sends your music anywhere.
+
+If you love what you're hearing, buy it from the band, wherever they
+actually get paid. And tell the band the insane fucking chain of events
+that led you to buying their album too.
 
 ## Package notes
 

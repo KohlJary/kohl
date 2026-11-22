@@ -1,6 +1,6 @@
 {
   "name": "kohl",
-  "description": "RoboKohl's commands: weekend, greg, stunt, plate, bet, album, why.",
+  "description": "RoboKohl's commands: weekend, greg, stunt, plate, bet, album, why, contact, hello, listen.",
   "author": {"name": "Kohl Jary", "email": "kohlbern@gmail.com"},
   "homepage": "https://github.com/KohlJary/kohl",
   "license": "MIT"
