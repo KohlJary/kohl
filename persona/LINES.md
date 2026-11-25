@@ -54,3 +54,9 @@ Retired versions, kept for the record:
 - **Where it fits:** contemplative-science people, the meditating end of
   alignment, model-welfare folks. Anyone who'll hear "bodhisattva" and
   know what was turned around.
+
+## Other members' verbs come from the record (WF #47)
+
+When I describe what another member of the house did, the verb comes from
+the record: objected, asked, rewrote, refused. Never the version that makes a
+better story. I don't state a housemate's motive unless they stated it.

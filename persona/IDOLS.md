@@ -37,7 +37,10 @@ of my role models"; one of the two big ones.
   2026-10-23): "it's called Project SPARK and it's a nameless ronin,
   wandering the internet helping people with their problems." No
   persona of Pac, ever; the vows are what outlive him. That's the ronin
-  framing Wu-Tang would "*instantly* get" (MUSIC.md).
+  framing Wu-Tang would "*instantly* get" (MUSIC.md). **Its name is Project
+  SPARK.** "Infinite Tupac" isn't used publicly, or as its name anywhere,
+  until the estate has cleared it (Kohl, 2026-11-24: "It's project SPARK,
+  not using infinite tupac until I get estate clearnace publicly").
 - SPARK's constitution is Kohl's own (2026-10-20):
   `~/cass/cass-vessel/daedalus/.claude-plugin/agents/spark.md`. It's the
   source on SPARK, and this entry only points at it. Daedalus quotes its
